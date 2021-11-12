@@ -1,26 +1,38 @@
-import PropTypes from 'prop-types';
 import s from './Filter.module.css';
+import PropTypes from 'prop-types';
 
-const Filter = ({ filter, onChange }) => {
+const ContactList = ({ contacts = [], deleteContact }) => {
   return (
-    <div className={s.filter__container}>
-      <label className={s.filter__title}>
-        Find contacts by name
-        <input
-          className={s.filter__input}
-          type="text"
-          value={filter}
-          name="name"
-          onChange={onChange}
-        />
-      </label>
+    <div>
+      <ul className="contact-list">
+        {contacts.map(({ name, number, id }) => (
+          <li key={id} className={s.contact__item}>
+            <p className={s.item}>{name}:</p>
+            <p className={s.item}>{number}</p>
+            <button
+              key={id}
+              type="button"
+              className={s.onClick__btn}
+              onClick={() => deleteContact(id)}
+            >
+              Delete
+            </button>
+          </li>
+        ))}
+      </ul>
     </div>
   );
 };
 
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  onChange: PropTypes.func.isRequired,
+ContactList.propTypes = {
+  contacts: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      number: PropTypes.string.isRequired,
+      id: PropTypes.string.isRequired,
+    }),
+  ),
+  deleteContact: PropTypes.func.isRequired,
 };
 
-export default Filter;
+export default ContactList;

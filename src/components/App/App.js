@@ -1,37 +1,27 @@
-import { Component } from 'react';
+import { useState, useEffect } from 'react';
 import './App.css';
 import ContactForm from '../ContactForm/ContactForm';
 import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
-import dataContacts from '../../FileJson/FileJson.json';
+import dataContacts from '../../fileJson/contacts.json';
 
-class App extends Component {
-  state = {
-    contacts: dataContacts,
-    filter: '',
-  };
+export default function App() {
+  const [contacts, setContacts] = useState(dataContacts);
+  const [filter, setFilter] = useState('');
 
-  componentDidMount() {
-    const contacts = localStorage.getItem('contacts');
-    const parsedContacts = JSON.parse(contacts);
-
+  useEffect(() => {
+    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
     if (parsedContacts) {
-      this.setState({ contacts: parsedContacts });
+      setContacts(parsedContacts);
     }
-  }
+  }, []);
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.contacts !== this.state.contacts) {
-      localStorage.setItem('contacts', JSON.stringify(this.state.contacts));
-    }
-  }
+  useEffect(() => {
+    localStorage.setItem('contacts', JSON.stringify(contacts));
+  }, [contacts]);
 
-  componentWillUnmount() {
-    console.log('unmount');
-  }
-
-  formSubmitHandler = data => {
-    const allReadyPresentContact = this.state.contacts.some(
+  const formSubmitHandler = data => {
+    const allReadyPresentContact = contacts.some(
       elem => elem.name.toLowerCase() === data.name.toLowerCase(),
     );
 
@@ -39,17 +29,14 @@ class App extends Component {
       return alert(`${data.name} is already in contacts.`);
     }
 
-    this.setState(({ contacts }) => ({
-      contacts: [data, ...contacts],
-    }));
+    setContacts([...contacts, data]);
   };
 
-  handleFilterChange = e => {
-    this.setState({ filter: e.target.value });
+  const handleFilterChange = e => {
+    setFilter(e.target.value);
   };
 
-  handleFilterContact = () => {
-    const { filter, contacts } = this.state;
+  const handleFilterContact = () => {
     const filterContact = filter.toLowerCase();
 
     return contacts.filter(contact =>
@@ -57,28 +44,20 @@ class App extends Component {
     );
   };
 
-  delContact = id => {
-    this.setState(prevState => ({
-      contacts: prevState.contacts.filter(contact => contact.id !== id),
-    }));
+  const delContact = id => {
+    setContacts(contacts.filter(contact => contact.id !== id));
   };
 
-  render() {
-    console.log('APP componentDidMount');
-    const { filter } = this.state;
-    const { formSubmitHandler, handleFilterChange, delContact } = this;
-    const getContact = this.handleFilterContact();
-
-    return (
-      <div className="Container">
-        <h1>Phonebook</h1>
-        <ContactForm onSubmit={formSubmitHandler} />
-        <h2>Contacts</h2>
-        <Filter filter={filter} onChange={handleFilterChange} />
-        <ContactList contacts={getContact} deleteContact={delContact} />
-      </div>
-    );
-  }
+  return (
+    <div className="Container">
+      <h1>Phonebook</h1>
+      <ContactForm onSubmit={formSubmitHandler} />
+      <h2>Contacts</h2>
+      <Filter filter={filter} onChange={handleFilterChange} />
+      <ContactList
+        contacts={handleFilterContact()}
+        deleteContact={delContact}
+      />
+    </div>
+  );
 }
-
-export default App;

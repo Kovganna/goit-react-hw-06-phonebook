@@ -1,79 +1,79 @@
-import { Component } from 'react';
+import { useState } from 'react';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import s from './ContactForm.module.css';
 
-class ContactForm extends Component {
-  state = {
-    name: '',
-    number: '',
-  };
+export default function ContactForm({ onSubmit }) {
+  const [name, setName] = useState('');
+  const [number, setNumber] = useState('');
 
-  nameInputId = uuidv4();
-  numberInputId = uuidv4();
-
-  handleChange = e => {
+  const handleChange = e => {
     const { name, value } = e.target;
-    this.setState({ [name]: value });
+    switch (name) {
+      case 'name':
+        setName(value);
+        break;
+      case 'number':
+        setNumber(value);
+        break;
+
+      default:
+        return;
+    }
   };
 
-  handleSubmit = e => {
-    const { name, number } = this.state;
+  const handleSubmit = e => {
     e.preventDefault();
-
     const contact = {
       id: uuidv4(),
       name,
       number,
     };
+    onSubmit(contact);
 
-    this.props.onSubmit(contact);
-    this.reset();
-  };
-  reset = () => {
-    this.setState({ name: '', number: '' });
+    reset();
   };
 
-  render() {
-    return (
-      <div className={s.contact__form}>
-        <form className={s.input__form} onSubmit={this.handleSubmit}>
-          <label htmlFor={this.nameInputId}>
-            <span className={s.input__title}>Name</span>
-            <input
-              type="text"
-              name="name"
-              pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
-              title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
-              required
-              className={s.input__name}
-              value={this.state.name}
-              onChange={this.handleChange}
-              id={this.nameInputId}
-            />
-          </label>
-          <label htmlFor={this.numberInputId}>
-            <span className={s.input__title}>Number</span>
-            <input
-              type="tel"
-              name="number"
-              pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
-              title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
-              required
-              className={s.input__number}
-              value={this.state.number}
-              onChange={this.handleChange}
-              id={this.numberInputId}
-            />
+  const reset = () => {
+    setName('');
+    setNumber('');
+  };
 
-            <button type="submit" className={s.btn__add}>
-              Add contact
-            </button>
-          </label>
-        </form>
-      </div>
-    );
-  }
+  return (
+    <div className={s.contact__form}>
+      <form className={s.input__form} onSubmit={handleSubmit}>
+        <label>
+          <span className={s.input__title}>Name</span>
+          <input
+            type="text"
+            name="name"
+            pattern="^[a-zA-Zа-яА-Я]+(([' -][a-zA-Zа-яА-Я ])?[a-zA-Zа-яА-Я]*)*$"
+            title="Имя может состоять только из букв, апострофа, тире и пробелов. Например Adrian, Jacob Mercer, Charles de Batz de Castelmore d'Artagnan и т. п."
+            required
+            className={s.input__name}
+            value={name}
+            onChange={handleChange}
+          />
+        </label>
+        <label>
+          <span className={s.input__title}>Number</span>
+          <input
+            type="tel"
+            name="number"
+            pattern="\+?\d{1,4}?[-.\s]?\(?\d{1,3}?\)?[-.\s]?\d{1,4}[-.\s]?\d{1,4}[-.\s]?\d{1,9}"
+            title="Номер телефона должен состоять цифр и может содержать пробелы, тире, круглые скобки и может начинаться с +"
+            required
+            className={s.input__number}
+            value={number}
+            onChange={handleChange}
+          />
+        </label>
+        <button type="submit" className={s.btn__add}>
+          Add contact
+        </button>
+      </form>
+    </div>
+  );
 }
 
 ContactForm.propTypes = {
@@ -84,5 +84,3 @@ ContactForm.propTypes = {
   nameInputId: PropTypes.string,
   numberInputId: PropTypes.string,
 };
-
-export default ContactForm;
