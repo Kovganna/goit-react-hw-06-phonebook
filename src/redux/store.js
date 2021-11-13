@@ -1,26 +1,45 @@
 // import { createStore } from 'redux';
-import { contactReducer } from './contacts/reducers';
-
 // import { composeWithDevTools } from 'redux-devtools-extension';
 // export const store = createStore(contactReducer, composeWithDevTools());
-
+import { combineReducers } from 'redux';
+import { contactList, contactFilter } from './contacts/reducers';
 import { configureStore } from '@reduxjs/toolkit';
+import logger from 'redux-logger';
+
+import {
+  persistStore,
+  persistReducer,
+  FLUSH,
+  REHYDRATE,
+  PAUSE,
+  PERSIST,
+  PURGE,
+  REGISTER,
+} from 'redux-persist';
+
+import storage from 'redux-persist/lib/storage';
+
+const persistConfig = {
+  key: 'contacts',
+  version: 1,
+  storage,
+  blacklist: ['filter'],
+};
+
+const contactReducer = combineReducers({
+  contacts: contactList,
+  filter: contactFilter,
+});
+const persistedContactReducer = persistReducer(persistConfig, contactReducer);
 
 export const store = configureStore({
-  reducer: contactReducer,
+  reducer: persistedContactReducer,
+  middleware: getDefaultMiddleware =>
+    getDefaultMiddleware({
+      serializableCheck: {
+        ignoredActions: [FLUSH, REHYDRATE, PAUSE, PERSIST, PURGE, REGISTER],
+      },
+    }).concat(logger),
 });
 
-// You can use subscribe() to update the UI in response to state changes.
-// Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
-// There may be additional use cases where it's helpful to subscribe as well.
-
-// store.subscribe(() => console.log(store.getState()));
-
-// // The only way to mutate the internal state is to dispatch an action.
-// // The actions can be serialized, logged or stored and later replayed.
-// store.dispatch({ type: 'counter/incremented' });
-// // {value: 1}
-// store.dispatch({ type: 'counter/incremented' });
-// // {value: 2}
-// store.dispatch({ type: 'counter/decremented' });
-// // {value: 1}
+export const persistor = persistStore(store);

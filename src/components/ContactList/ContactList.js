@@ -1,9 +1,14 @@
 import { removeContact } from '../../redux/contacts/actions';
 import s from './ContactList.module.css';
-import PropTypes from 'prop-types';
-import { connect } from 'react-redux';
+// import PropTypes from 'prop-types';
+import { getContacts } from '../../redux/contacts/selectors';
+// import { connect } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-const ContactList = ({ contacts, deleteContact }) => {
+const ContactList = () => {
+  const contacts = useSelector(getContacts);
+  const dispatch = useDispatch();
+
   return (
     <div>
       <ul className="contact-list">
@@ -15,7 +20,7 @@ const ContactList = ({ contacts, deleteContact }) => {
               key={id}
               type="button"
               className={s.onClick__btn}
-              onClick={() => deleteContact(id)}
+              onClick={() => dispatch(removeContact(id))}
             >
               Delete
             </button>
@@ -25,28 +30,51 @@ const ContactList = ({ contacts, deleteContact }) => {
     </div>
   );
 };
+export default ContactList;
 
-const mapStateToProps = state => {
-  return {
-    contactsList: state.contacts,
-  };
-};
-const mapDispatchToProps = dispatch => {
-  return {
-    onDelete: contact => dispatch(removeContact(contact)),
-  };
-};
+// function ContactList({ contacts, deleteContact }) {
+//   return (
+//     <div>
+//       <ul className="contact-list">
+//         {contacts.map(({ name, number, id }) => (
+//           <li key={id} className={s.contact__item}>
+//             <p className={s.item}>{name}:</p>
+//             <p className={s.item}>{number}</p>
+//             <button
+//               key={id}
+//               type="button"
+//               className={s.onClick__btn}
+//               onClick={() => deleteContact(id)}
+//             >
+//               Delete
+//             </button>
+//           </li>
+//         ))}
+//       </ul>
+//     </div>
+//   );
+// }
 
-ContactList.propTypes = {
-  contacts: PropTypes.arrayOf(
-    PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      number: PropTypes.string.isRequired,
-      id: PropTypes.string.isRequired,
-    }),
-  ),
-  deleteContact: PropTypes.func.isRequired,
-};
+// const mapStateToProps = state => {
+//   return {
+//     contacts: state.contacts,
+//   };
+// };
+// const mapDispatchToProps = dispatch => {
+//   return {
+//     deleteContact: id => dispatch(removeContact(id)),
+//   };
+// };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactList);
-// export default ContactList;
+// ContactList.propTypes = {
+//   contacts: PropTypes.arrayOf(
+//     PropTypes.shape({
+//       name: PropTypes.string.isRequired,
+//       number: PropTypes.string.isRequired,
+//       id: PropTypes.string.isRequired,
+//     }),
+//   ),
+//   deleteContact: PropTypes.func.isRequired,
+// };
+
+// export default connect(mapStateToProps, mapDispatchToProps)(ContactList);

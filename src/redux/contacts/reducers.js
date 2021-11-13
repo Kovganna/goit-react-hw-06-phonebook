@@ -1,6 +1,6 @@
-import { combineReducers } from 'redux';
 import { createReducer } from '@reduxjs/toolkit';
 import dataContacts from '../../fileJson/contacts.json';
+import { addContact, removeContact, filterContacts } from './actions';
 
 const initState = [{ id: '', dataContacts }];
 
@@ -17,21 +17,16 @@ const initState = [{ id: '', dataContacts }];
 //   }
 // };
 
-const contactList = createReducer(initState, {
-  'contact/add': (state, { payload }) => [...state, payload],
-  'contact/delete': (state, { payload }) =>
-    state.filter(contact => contact.id !== payload.id),
-});
-
 // const contactFilter = (state = '', { payload }) => {
 //   return payload;
 // };
 
-const contactFilter = createReducer('', {
-  'contact/filter': (_, { payload }) => payload,
+export const contactList = createReducer(initState, {
+  [addContact]: (state, { payload }) => [...state, payload],
+  [removeContact]: (state, { payload }) =>
+    state.filter(contact => contact.id !== payload),
 });
 
-export const contactReducer = combineReducers({
-  contacts: contactList,
-  filter: contactFilter,
+export const contactFilter = createReducer('', {
+  [filterContacts]: (_, { payload }) => payload,
 });
