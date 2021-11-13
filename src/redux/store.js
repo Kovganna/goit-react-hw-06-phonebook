@@ -1,31 +1,21 @@
 import { createStore } from 'redux';
-import dataContacts from '../fileJson/contacts.json';
+import { contactReducer } from './contacts/reducers';
 
-const initialState = { contacts: dataContacts };
+import { composeWithDevTools } from 'redux-devtools-extension';
 
-const reducer = (state = initialState, { type, payload }) => {
-  switch (type) {
-    case 'input/Add':
-      //   return { contacts: state.contacts + payload };
-      return { contacts: [state, ...payload] };
+export const store = createStore(contactReducer, composeWithDevTools());
 
-    case 'input/Delete':
-      return {
-        contacts: state.contacts.filter(contact => contact.id !== payload),
-        // contacts: state.contacts - payload,
-      };
+// You can use subscribe() to update the UI in response to state changes.
+// Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.
+// There may be additional use cases where it's helpful to subscribe as well.
 
-    // case 'filter':
-    //     const filterContact = filter.toLowerCase();
-    //     return {state.filter(contact =>
-    //         contact.name.toLowerCase().includes(filterContact),
-    //       )};
+// store.subscribe(() => console.log(store.getState()));
 
-    default:
-      return state;
-  }
-};
-
-const store = createStore(reducer);
-
-export default store;
+// // The only way to mutate the internal state is to dispatch an action.
+// // The actions can be serialized, logged or stored and later replayed.
+// store.dispatch({ type: 'counter/incremented' });
+// // {value: 1}
+// store.dispatch({ type: 'counter/incremented' });
+// // {value: 2}
+// store.dispatch({ type: 'counter/decremented' });
+// // {value: 1}
