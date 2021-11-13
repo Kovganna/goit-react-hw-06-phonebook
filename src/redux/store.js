@@ -1,9 +1,14 @@
-import { createStore } from 'redux';
+// import { createStore } from 'redux';
 import { contactReducer } from './contacts/reducers';
 
-import { composeWithDevTools } from 'redux-devtools-extension';
+// import { composeWithDevTools } from 'redux-devtools-extension';
+// export const store = createStore(contactReducer, composeWithDevTools());
 
-export const store = createStore(contactReducer, composeWithDevTools());
+import { configureStore } from '@reduxjs/toolkit';
+
+export const store = configureStore({
+  reducer: contactReducer,
+});
 
 // You can use subscribe() to update the UI in response to state changes.
 // Normally you'd use a view binding library (e.g. React Redux) rather than subscribe() directly.

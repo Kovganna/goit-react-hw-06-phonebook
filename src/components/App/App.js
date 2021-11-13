@@ -4,10 +4,17 @@ import ContactForm from '../ContactForm/ContactForm';
 import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
 import dataContacts from '../../fileJson/contacts.json';
+import { useDispatch } from 'react-redux';
+import { filterContacts } from '../../redux/contacts/actions';
 
 export default function App() {
   const [contacts, setContacts] = useState(dataContacts);
   const [filter, setFilter] = useState('');
+
+  //=====Redux=====//
+  const dispatch = useDispatch();
+
+  //=====Redux=====//
 
   useEffect(() => {
     const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
@@ -23,6 +30,7 @@ export default function App() {
   const formSubmitHandler = data => {
     const allReadyPresentContact = contacts.some(
       elem => elem.name.toLowerCase() === data.name.toLowerCase(),
+      // dispatch(),
     );
 
     if (allReadyPresentContact) {
@@ -33,7 +41,8 @@ export default function App() {
   };
 
   const handleFilterChange = e => {
-    setFilter(e.target.value);
+    setFilter(e.target.value); // сетим локально
+    dispatch(filterContacts(e.target.value)); // отправляем значение в redux
   };
 
   const handleFilterContact = () => {

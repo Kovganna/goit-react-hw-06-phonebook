@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { connect } from 'react-redux';
-// import { useSelector, useDispatch } from 'react-redux';
-
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 import { v4 as uuidv4 } from 'uuid';
 import { addContact } from '../../redux/contacts/actions';
@@ -10,7 +9,8 @@ import s from './ContactForm.module.css';
 function ContactForm({ onSubmit }) {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
-  // const dispatch = useDispatch();
+
+  const dispatch = useDispatch();
 
   const handleChange = e => {
     const { name, value } = e.target;
@@ -38,7 +38,7 @@ function ContactForm({ onSubmit }) {
     onSubmit(contact);
 
     // onAdd(contact); //диспатчим contact в redux
-
+    dispatch(addContact(contact));
     reset();
   };
 
@@ -93,15 +93,15 @@ ContactForm.propTypes = {
   numberInputId: PropTypes.string,
 };
 
-const mapStateToProps = state => {
-  return {
-    contactsList: state.contacts,
-  };
-};
+// const mapStateToProps = state => {
+//   return {
+//     contactsList: state.contacts,
+//   };
+// };
 const mapDispatchToProps = dispatch => {
   return {
     onnAdd: value => dispatch(addContact(value)),
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(ContactForm);
+export default connect(null, mapDispatchToProps)(ContactForm);
