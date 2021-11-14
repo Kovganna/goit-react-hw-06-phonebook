@@ -1,12 +1,12 @@
 import { removeContact } from '../../redux/contacts/actions';
 import s from './ContactList.module.css';
 // import PropTypes from 'prop-types';
-import { getContacts } from '../../redux/contacts/selectors';
 // import { connect } from 'react-redux';
+import selectors from '../../redux/contacts/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 
-const ContactList = () => {
-  const contacts = useSelector(getContacts);
+export default function ContactList() {
+  const contacts = useSelector(selectors.getFilteredContacts);
   const dispatch = useDispatch();
 
   return (
@@ -29,8 +29,7 @@ const ContactList = () => {
       </ul>
     </div>
   );
-};
-export default ContactList;
+}
 
 // function ContactList({ contacts, deleteContact }) {
 //   return (

@@ -1,72 +1,73 @@
-import { useState, useEffect } from 'react';
+// import { useState, useEffect } from 'react';
 import './App.css';
 import ContactForm from '../ContactForm/ContactForm';
 import Filter from '../Filter/Filter';
 import ContactList from '../ContactList/ContactList';
-import dataContacts from '../../fileJson/contacts.json';
-import { useDispatch } from 'react-redux';
-import { filterContacts } from '../../redux/contacts/actions';
-import { addContact } from '../../redux/contacts/actions';
+// import dataContacts from '../../fileJson/contacts.json';
 
 export default function App() {
-  const [contacts, setContacts] = useState(dataContacts);
-  const [filter, setFilter] = useState('');
+  // const [contacts, setContacts] = useState(dataContacts);
+  // const [filter, setFilter] = useState('');
 
-  //=====Redux=====//
-  const dispatch = useDispatch();
+  // useEffect(() => {
+  //   const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
+  //   if (parsedContacts) {
+  //     setContacts(parsedContacts);
+  //   }
+  // }, []);
 
-  //=====Redux=====//
+  // useEffect(() => {
+  //   localStorage.setItem('contacts', JSON.stringify(contacts));
+  // }, [contacts]);
 
-  useEffect(() => {
-    const parsedContacts = JSON.parse(localStorage.getItem('contacts'));
-    if (parsedContacts) {
-      setContacts(parsedContacts);
-    }
-  }, []);
+  // const formSubmitHandler = data => {
+  //   const allReadyPresentContact = contacts.some(
+  //     elem => elem.name.toLowerCase() === data.name.toLowerCase(),
+  //   );
 
-  useEffect(() => {
-    localStorage.setItem('contacts', JSON.stringify(contacts));
-  }, [contacts]);
+  //   if (allReadyPresentContact) {
+  //     return alert(`${data.name} is already in contacts.`);
+  //   }
 
-  const formSubmitHandler = data => {
-    const allReadyPresentContact = contacts.some(
-      elem => elem.name.toLowerCase() === data.name.toLowerCase(),
-    );
+  //   setContacts([...contacts, data]);
+  // };
 
-    if (allReadyPresentContact) {
-      return alert(`${data.name} is already in contacts.`);
-    }
+  // const handleFilterChange = e => {
+  //   setFilter(e.target.value); // сетим локально
+  // };
 
-    setContacts([...contacts, data]);
-  };
+  // const handleFilterContact = () => {
+  //   const filterContact = filter.toLowerCase();
 
-  const handleFilterChange = e => {
-    // setFilter(e.target.value); // сетим локально
-    dispatch(filterContacts(e.target.value)); // отправляем значение в redux
-  };
+  //   return contacts.filter(contact =>
+  //     contact.name.toLowerCase().includes(filterContact),
+  //   );
+  // };
 
-  const handleFilterContact = () => {
-    const filterContact = filter.toLowerCase();
+  // const delContact = id => {
+  //   setContacts(contacts.filter(contact => contact.id !== id));
+  // };
 
-    return contacts.filter(contact =>
-      contact.name.toLowerCase().includes(filterContact),
-    );
-  };
-
-  const delContact = id => {
-    setContacts(contacts.filter(contact => contact.id !== id));
-  };
+  // return (
+  //   <div className="Container">
+  //     <h1>Phonebook</h1>
+  //     <ContactForm onSubmit={formSubmitHandler} />
+  //     <h2>Contacts</h2>
+  //     <Filter filter={filter} onChange={handleFilterChange} />
+  //     <ContactList
+  //       contacts={handleFilterContact()}
+  //       deleteContact={delContact}
+  //     />
+  //   </div>
+  // );
 
   return (
     <div className="Container">
       <h1>Phonebook</h1>
-      <ContactForm onSubmit={formSubmitHandler} />
+      <ContactForm />
       <h2>Contacts</h2>
-      <Filter filter={filter} onChange={handleFilterChange} />
-      <ContactList
-        contacts={handleFilterContact()}
-        deleteContact={delContact}
-      />
+      <Filter />
+      <ContactList />
     </div>
   );
 }

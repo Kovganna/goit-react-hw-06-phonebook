@@ -1,15 +1,17 @@
 import { useState } from 'react';
 // import { connect } from 'react-redux';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import PropTypes from 'prop-types';
-import { v4 as uuidv4 } from 'uuid';
+// import { v4 as uuidv4 } from 'uuid';
+import selectors from '../../redux/contacts/selectors';
 import { addContact } from '../../redux/contacts/actions';
 import s from './ContactForm.module.css';
 
-function ContactForm() {
+export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
+  const contacts = useSelector(selectors.getContacts);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -29,17 +31,25 @@ function ContactForm() {
 
   const handleSubmit = e => {
     e.preventDefault();
-    const contact = {
-      id: uuidv4(),
-      name,
-      number,
-    };
+    // const contact = {
+    //   id: uuidv4(),
+    //   name,
+    //   number,
+    // };
+
+    const allReadyPresentContact = contacts.some(
+      elem => elem.name.toLowerCase() === name.toLowerCase(),
+    );
+
+    if (allReadyPresentContact) {
+      reset();
+      return alert(`${name} is already in contacts.`);
+    }
 
     // onSubmit(contact);
 
     // onAdd(contact); //диспатчим contact в redux
-    dispatch(addContact(contact));
-    reset();
+    dispatch(addContact({ name, number }));
   };
 
   const reset = () => {
@@ -89,8 +99,8 @@ ContactForm.propTypes = {
   number: PropTypes.number,
   handleChange: PropTypes.func,
   handleSubmit: PropTypes.func,
-  nameInputId: PropTypes.string,
-  numberInputId: PropTypes.string,
+  //nameInputId: PropTypes.string,
+  //numberInputId: PropTypes.string,
 };
 
 // const mapStateToProps = state => {
@@ -105,4 +115,3 @@ ContactForm.propTypes = {
 // };
 
 // export default connect(null, mapDispatchToProps)(ContactForm);
-export default ContactForm;
