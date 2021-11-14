@@ -2,11 +2,11 @@ import { removeContact } from '../../redux/contacts/actions';
 import s from './ContactList.module.css';
 // import PropTypes from 'prop-types';
 // import { connect } from 'react-redux';
-import selectors from '../../redux/contacts/selectors';
+import { getFilteredContacts } from '../../redux/contacts/selectors';
 import { useSelector, useDispatch } from 'react-redux';
 
 export default function ContactList() {
-  const contacts = useSelector(selectors.getFilteredContacts);
+  const contacts = useSelector(getFilteredContacts);
   const dispatch = useDispatch();
 
   return (

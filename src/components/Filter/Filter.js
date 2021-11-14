@@ -1,11 +1,11 @@
-import PropTypes from 'prop-types';
+// import PropTypes from 'prop-types';
 import { useSelector, useDispatch } from 'react-redux';
 import { filterContacts } from '../../redux/contacts/actions';
-import selectors from '../../redux/contacts/selectors';
+import { getFilter } from '../../redux/contacts/selectors';
 import s from './Filter.module.css';
 
 const Filter = () => {
-  const filter = useSelector(selectors.getFilter);
+  const filter = useSelector(getFilter);
   const dispatch = useDispatch();
 
   const handleFilterChange = e => {
@@ -28,9 +28,9 @@ const Filter = () => {
   );
 };
 
-Filter.propTypes = {
-  filter: PropTypes.string.isRequired,
-  handleFilterChange: PropTypes.func.isRequired,
-};
+// Filter.propTypes = {
+//   filter: PropTypes.string.isRequired,
+//   handleFilterChange: PropTypes.func.isRequired,
+// };
 
 export default Filter;

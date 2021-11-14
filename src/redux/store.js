@@ -4,6 +4,7 @@
 import { combineReducers } from 'redux';
 import { contactList, contactFilter } from './contacts/reducers';
 import { configureStore } from '@reduxjs/toolkit';
+
 import logger from 'redux-logger';
 
 import {
@@ -23,17 +24,18 @@ const persistConfig = {
   key: 'contacts',
   version: 1,
   storage,
-  blacklist: ['filter'],
+  blacklist: ['contactFilter'],
 };
 
 const contactReducer = combineReducers({
-  contacts: contactList,
-  filter: contactFilter,
+  contactList,
+  contactFilter,
 });
-const persistedContactReducer = persistReducer(persistConfig, contactReducer);
 
 export const store = configureStore({
-  reducer: persistedContactReducer,
+  reducer: {
+    contacts: persistReducer(persistConfig, contactReducer),
+  },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({
       serializableCheck: {

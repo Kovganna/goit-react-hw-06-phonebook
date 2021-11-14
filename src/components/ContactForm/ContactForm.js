@@ -1,17 +1,18 @@
 import { useState } from 'react';
 // import { connect } from 'react-redux';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import PropTypes from 'prop-types';
 // import { v4 as uuidv4 } from 'uuid';
-import selectors from '../../redux/contacts/selectors';
+import { getContacts } from '../../redux/contacts/selectors';
 import { addContact } from '../../redux/contacts/actions';
+
 import s from './ContactForm.module.css';
 
 export default function ContactForm() {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const contacts = useSelector(selectors.getContacts);
+  const contacts = useSelector(getContacts);
   const dispatch = useDispatch();
 
   const handleChange = e => {
@@ -37,19 +38,19 @@ export default function ContactForm() {
     //   number,
     // };
 
-    const allReadyPresentContact = contacts.some(
+    const allReadyPresentContact = contacts.find(
       elem => elem.name.toLowerCase() === name.toLowerCase(),
     );
 
     if (allReadyPresentContact) {
-      reset();
-      return alert(`${name} is already in contacts.`);
+      alert(`${name} is already in contacts.`);
+    } else {
+      // onSubmit(contact);
+
+      // onAdd(contact); //диспатчим contact в redux
+      dispatch(addContact({ name, number }));
     }
-
-    // onSubmit(contact);
-
-    // onAdd(contact); //диспатчим contact в redux
-    dispatch(addContact({ name, number }));
+    reset();
   };
 
   const reset = () => {

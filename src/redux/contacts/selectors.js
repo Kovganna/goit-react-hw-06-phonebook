@@ -1,6 +1,6 @@
-const getContacts = state => state.contacts.contactList;
+export const getContacts = state => state.contacts.contactList;
 
-const getFilter = state => state.contacts.contactFilter;
+export const getFilter = state => state.contacts.contactFilter;
 
 export const getFilteredContacts = state => {
   const lowerCasedFilter = getFilter(state).toLowerCase();
@@ -9,9 +9,3 @@ export const getFilteredContacts = state => {
     name.toLowerCase().includes(lowerCasedFilter),
   );
 };
-const selectors = {
-  getContacts,
-  getFilter,
-  getFilteredContacts,
-};
-export default selectors;
